@@ -1,0 +1,6 @@
+esi_level,urgency_band,definition_summary,resource_concept,source_note
+1,Most urgent,Immediate life-saving intervention,Resuscitation/immediate stabilization,Based on AHRQ Emergency Severity Index Version 4; not a Panacea funding score.
+2,High urgency,High-risk/severe distress/time-sensitive,Very rapid assessment,Based on AHRQ Emergency Severity Index Version 4; not a Panacea funding score.
+3,Moderate urgency,Stable; multiple resources may be needed,Multiple resources,Based on AHRQ Emergency Severity Index Version 4; not a Panacea funding score.
+4,Lower urgency,Stable; one resource expected,Single resource,Based on AHRQ Emergency Severity Index Version 4; not a Panacea funding score.
+5,Lowest urgency,Stable; no resources expected,No resources,Based on AHRQ Emergency Severity Index Version 4; not a Panacea funding score.

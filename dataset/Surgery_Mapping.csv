@@ -1,0 +1,31 @@
+department,surgery_name,example_icd10_pcs_code,source_note
+General Surgery,Appendectomy,0DTJ0ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+General Surgery,Cholecystectomy,0FT40ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+General Surgery,Colectomy,0DTM0ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+General Surgery,Small bowel resection,0DT80ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+General Surgery,Hernia repair,0WQF0ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Cardiothoracic Surgery,Coronary artery bypass graft,02100Z9,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Cardiothoracic Surgery,Aortic valve replacement,02RF0JZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Cardiothoracic Surgery,Mitral valve replacement,02RG0JZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Cardiothoracic Surgery,Thoracic lobectomy,0BTJ0ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Neurosurgery,Intracranial excision/craniotomy,00B70ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Neurosurgery,Cerebral aneurysm intervention,03VG0CZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Neurosurgery,Spinal decompression,0SB00ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Orthopedics,Hip replacement,0SRB0J9,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Orthopedics,Knee replacement,0SRC0J9,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Orthopedics,Femur fixation,0QS604Z,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Orthopedics,Tibial fixation,0QSG04Z,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Vascular Surgery,Lower-extremity bypass,041K0JH,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Vascular Surgery,Aortic repair,04V00DZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Vascular Surgery,Embolectomy,03C70ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Urology,Nephrectomy,0TT00ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Urology,Ureteral stent procedure,0T788DZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Urology,Transurethral prostate resection,0VB08ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Obstetrics,Cesarean section,10D00Z1,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Obstetrics,Ectopic pregnancy surgery,10T00ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Gynecology,Hysterectomy,0UT90ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Oncology,Mastectomy,0HTV0ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Oncology,Lung resection,0BTG0ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Oncology,Liver resection,0FT00ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+ENT,Tonsillectomy,0CTP0ZZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.
+Ophthalmology,Cataract extraction,08RK3JZ,Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.

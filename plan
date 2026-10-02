@@ -1,0 +1,1396 @@
+# Plan Panacea Vault
+
+## Master Implementation Plan for Claude Code
+
+> **Project:** Panacea Vault  
+> **Purpose:** End-to-end medical crowdfunding allocation prototype driven by a strict 0/1 Knapsack engine, real project datasets, transparent scoring, emergency handling, financial auditability, and a Bio-Emerald product identity.
+
+---
+
+# 1. Project Objective
+
+Build Panacea Vault as a complete, runnable full-stack application rather than a static UI prototype.
+
+The system must connect:
+
+```text
+Existing Dataset
+      ↓
+Dataset Validation
+      ↓
+Medical / Urgency Scoring
+      ↓
+Budget Calculation
+      ↓
+0/1 Knapsack
+      ↓
+Greedy Fallback
+      ↓
+Allocation Result
+      ↓
+Approval
+      ↓
+Hospital Disbursement
+      ↓
+Utilization Verification
+      ↓
+Settlement
+      ↓
+Audit Trail
+```
+
+The implementation must include:
+
+- React + TypeScript frontend
+- Python + FastAPI backend
+- MySQL database
+- Authentication
+- Role-Based Access Control
+- Real DSA implementation
+- Existing dataset integration
+- Emergency reserve handling
+- Financial ledger
+- Audit trail
+- Analytics dashboard
+- Testing
+- Documentation
+
+---
+
+# 2. Existing Repository Strategy
+
+Before writing code, inspect the existing repository.
+
+Do not assume the repository is empty.
+
+Preserve useful existing work.
+
+Current project structure is expected to contain:
+
+```text
+panacea-vault/
+├── dataset/
+├── LICENSE
+└── README.md
+```
+
+The existing `dataset/` directory is the **primary source of truth for prototype data**.
+
+Do not replace or unnecessarily restructure the original dataset.
+
+---
+
+# 3. Dataset Strategy
+
+The existing `dataset/` folder must be inspected before implementation.
+
+The implementation must discover the actual:
+
+- filenames
+- file formats
+- columns
+- data types
+- row counts
+- identifiers
+- relationships
+- missing values
+- duplicate records
+- categorical values
+- numeric ranges
+
+Do not guess the dataset schema.
+
+Do not fabricate medical values.
+
+Do not overwrite original source files.
+
+If preprocessing is required:
+
+```text
+Original Dataset
+      ↓
+Validation
+      ↓
+Processing
+      ↓
+Database / Application
+```
+
+Keep original source files immutable.
+
+---
+
+# 4. Current Dataset Concept
+
+The repository currently contains the following conceptual data categories:
+
+```text
+dataset/
+├── ESI_Reference.csv
+├── ICD_Severity.csv
+├── Surgery_Mapping.csv
+└── Synthetic_Queue.csv
+```
+
+These files must be inspected and integrated according to their actual schemas.
+
+Conceptual responsibility:
+
+| Dataset | Application Responsibility |
+|---|---|
+| ESI Reference | Emergency severity lookup |
+| ICD Severity | Disease/severity lookup |
+| Surgery Mapping | Procedure/surgery selection |
+| Synthetic Queue | Prototype patient/request workload |
+
+The exact field mappings must be derived from the real files.
+
+---
+
+# 5. Dataset Validation
+
+Create validation utilities under:
+
+```text
+scripts/
+├── data_generation/
+├── data_validation/
+└── utilities/
+```
+
+Validation should detect:
+
+- malformed rows
+- missing required fields
+- duplicate identifiers
+- invalid costs
+- invalid severity values
+- invalid ESI values
+- broken relationships
+- unexpected nulls
+- invalid data types
+
+Create a command capable of validating the complete dataset.
+
+Example:
+
+```bash
+python scripts/data_validation/validate_all.py
+```
+
+The dataset documentation must be generated from the actual dataset structure.
+
+---
+
+# 6. Core DSA Architecture
+
+Panacea Vault uses a dual-stage allocation engine.
+
+```text
+Eligible Requests
+      ↓
+Stage 1: 0/1 Knapsack
+      ↓
+Remaining Budget
+      ↓
+Stage 2: Greedy Fallback
+      ↓
+Final Allocation
+```
+
+---
+
+# 7. Stage 1 — 0/1 Knapsack
+
+Implement genuine 0/1 Knapsack Dynamic Programming.
+
+Each treatment request is treated as an item.
+
+### Weight
+
+Complete treatment package cost.
+
+### Value
+
+Calculated urgency score.
+
+### Constraint
+
+Total selected package cost must not exceed the available allocation budget.
+
+### Objective
+
+Maximize total urgency value.
+
+Mathematically:
+
+```text
+maximize:
+
+Σ(value_i × x_i)
+
+subject to:
+
+Σ(weight_i × x_i) <= Budget
+
+where:
+
+x_i ∈ {0,1}
+```
+
+Implement:
+
+- DP state
+- recurrence
+- base cases
+- reconstruction/backtracking
+- selected item recovery
+- total allocation
+- total urgency
+- remaining budget
+
+Target conceptual complexity:
+
+```text
+O(N × W)
+```
+
+where:
+
+- N = number of eligible requests
+- W = normalized budget capacity
+
+If currency scaling/discretization is required, document the strategy.
+
+---
+
+# 8. Stage 2 — Greedy Fallback
+
+After Knapsack:
+
+```text
+remaining_budget =
+available_budget - knapsack_allocated_amount
+```
+
+Run a deterministic Greedy fallback.
+
+Purpose:
+
+Use otherwise-unused funds where eligible packages can fit.
+
+The Greedy stage must:
+
+- respect remaining budget
+- respect eligibility
+- respect emergency reserve
+- prevent duplicate allocations
+- produce deterministic results
+- record decisions
+
+Do not claim that the Greedy stage provides globally optimal allocation.
+
+---
+
+# 9. Urgency Scoring
+
+Create a centralized scoring service.
+
+Do not scatter scoring logic across frontend components.
+
+The scoring model must use the actual available dataset fields.
+
+Potential components include:
+
+- ICD severity
+- ESI
+- procedure/treatment context
+- waiting time
+- emergency status
+
+Only use components actually supported by the project data/model.
+
+Return an explainable score breakdown.
+
+Example:
+
+```json
+{
+  "base_severity": 70,
+  "esi_component": 15,
+  "waiting_time_boost": 10,
+  "emergency_component": 0,
+  "final_score": 95
+}
+```
+
+The exact fields must match the implemented scoring model.
+
+Users must not be allowed to manually enter an arbitrary final urgency score.
+
+---
+
+# 10. Anti-Starvation Protocol
+
+Implement the Panacea Vault waiting-time mechanism.
+
+Policy:
+
+```text
++5 urgency points per eligible waiting cycle/day
+```
+
+Make the value configurable:
+
+```text
+WAITING_TIME_BOOST = 5
+```
+
+The score breakdown must show:
+
+- original score
+- waiting period
+- waiting boost
+- final score
+
+Define a safe accumulation policy if required.
+
+---
+
+# 11. Emergency Reserve
+
+Reserve:
+
+```text
+15% of daily funding budget
+```
+
+as the emergency reserve.
+
+Configuration:
+
+```text
+EMERGENCY_RESERVE_PERCENT = 15
+```
+
+Track separately:
+
+```text
+total_daily_budget
+normal_budget
+emergency_reserve
+normal_remaining
+emergency_remaining
+```
+
+Emergency allocation must:
+
+- verify eligibility
+- check reserve
+- require authorization
+- create ledger entry
+- create audit entry
+- record timestamp
+- record reason
+
+Emergency operations may bypass the normal batch allocation only through an explicit authorized workflow.
+
+---
+
+# 12. Treatment Package Model
+
+The funding unit should represent the complete treatment package.
+
+Conceptually:
+
+```text
+Surgery
++
+ICU / Inpatient
++
+Standard Medication
+=
+Treatment Package
+```
+
+However, use the actual dataset structure.
+
+If package-level cost already exists, use it.
+
+If components exist separately, calculate the package cost transparently.
+
+Do not double-count costs.
+
+---
+
+# 13. Database Architecture
+
+Use MySQL.
+
+Suggested entities:
+
+```text
+users
+roles
+hospitals
+patients
+diseases
+procedures
+treatment_packages
+funding_requests
+urgency_scores
+budgets
+allocation_runs
+allocation_results
+emergency_allocations
+disbursements
+utilization_certificates
+audit_logs
+```
+
+Use:
+
+- primary keys
+- foreign keys
+- indexes
+- constraints
+- timestamps
+- database transactions
+
+---
+
+# 14. Financial Lifecycle
+
+Use a controlled state machine.
+
+Example:
+
+```text
+PENDING
+   ↓
+ELIGIBLE
+   ↓
+SELECTED
+   ↓
+APPROVED
+   ↓
+DISBURSED
+   ↓
+UTILIZATION_PENDING
+   ↓
+VERIFIED
+   ↓
+SETTLED
+```
+
+Invalid state transitions must be rejected.
+
+Financial operations must be transaction-safe.
+
+---
+
+# 15. Escrow-Style Disbursement
+
+Represent the financial flow as:
+
+```text
+Vault
+  ↓
+Approved Allocation
+  ↓
+Verified Hospital
+  ↓
+Utilization Certificate
+  ↓
+Settlement
+```
+
+For the prototype, payment transfer may be simulated.
+
+If simulated, label it clearly:
+
+```text
+DEMO PAYMENT
+SIMULATED ESCROW
+```
+
+Never represent simulated payments as real bank transfers.
+
+---
+
+# 16. Authentication
+
+Implement secure authentication.
+
+Roles:
+
+```text
+PATIENT
+DOCTOR
+HOSPITAL
+ADMIN
+AUDITOR
+DONOR
+```
+
+Implement:
+
+- login
+- logout/session invalidation
+- authenticated-user endpoint
+- route protection
+- backend authorization
+
+Never store plaintext passwords.
+
+---
+
+# 17. RBAC
+
+Authorization must be enforced server-side.
+
+### Patient
+
+Can:
+
+- view own requests
+- view own status
+
+### Doctor
+
+Can:
+
+- create treatment/funding requests
+- select standardized medical information
+
+### Hospital
+
+Can:
+
+- view approved allocations
+- manage utilization workflow
+
+### Admin
+
+Can:
+
+- manage budgets
+- execute allocation runs
+- authorize emergency operations
+
+### Auditor
+
+Can:
+
+- inspect financial records
+- inspect allocation history
+- inspect audit logs
+
+### Donor
+
+Can:
+
+- view aggregate impact metrics
+
+Never expose unnecessary patient-identifying information.
+
+---
+
+# 18. Audit Trail
+
+Important events should include:
+
+```text
+USER_LOGIN
+REQUEST_CREATED
+REQUEST_UPDATED
+SCORE_CALCULATED
+ALLOCATION_STARTED
+KNAPSACK_COMPLETED
+GREEDY_FALLBACK_COMPLETED
+EMERGENCY_ALLOCATION
+ALLOCATION_APPROVED
+DISBURSEMENT_CREATED
+UC_SUBMITTED
+UC_VERIFIED
+CASE_SETTLED
+```
+
+Audit records should contain:
+
+- actor
+- role
+- timestamp
+- action
+- entity
+- entity ID
+- metadata
+- state transition where relevant
+
+---
+
+# 19. Target Repository Structure
+
+Preserve the existing structure and expand it into:
+
+```text
+panacea-vault/
+│
+├── frontend/
+│   ├── public/
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── layouts/
+│       ├── hooks/
+│       ├── services/
+│       ├── utils/
+│       └── assets/
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   ├── auth/
+│   │   └── utils/
+│   │
+│   ├── database/
+│   │   ├── schema/
+│   │   ├── migrations/
+│   │   └── seed/
+│   │
+│   └── requirements.txt
+│
+├── dsa-engine/
+│   ├── knapsack/
+│   ├── greedy/
+│   ├── scoring/
+│   ├── emergency/
+│   └── tests/
+│
+├── dataset/
+│   ├── ESI_Reference.csv
+│   ├── ICD_Severity.csv
+│   ├── Surgery_Mapping.csv
+│   └── Synthetic_Queue.csv
+│
+├── scripts/
+│   ├── data_generation/
+│   ├── data_validation/
+│   └── utilities/
+│
+├── tests/
+│   ├── frontend/
+│   ├── backend/
+│   ├── dsa/
+│   └── integration/
+│
+├── docs/
+│   ├── architecture/
+│   ├── api/
+│   ├── database/
+│   └── algorithms/
+│
+├── .gitignore
+├── README.md
+├── LICENSE
+└── .env.example
+```
+
+Additional technically necessary files may be added.
+
+Do not unnecessarily rename existing folders.
+
+---
+
+# 20. Bio-Emerald Design System
+
+The Panacea Vault UI must use the Bio-Emerald visual identity.
+
+## Dark Mode
+
+```text
+Background:       #041E20
+Main Text:        #E8F5E9
+Primary Accent:   #00FFA3
+Card Background:  rgba(6, 42, 45, 0.85)
+Card Border:      rgba(0, 255, 163, 0.15)
+Highlight:        #FFB300
+Secondary Text:   #A5D6A7
+```
+
+## Light Mode
+
+```text
+Background:       #D1E8E2
+Main Text:        #2C3E50
+Primary Heading:  #1A5276
+Card Background:  rgba(255,255,255,0.85)
+Highlight:        #C0392B
+Technology:       #16A085
+Secondary Text:   #5D6D7E
+```
+
+The supplied Panacea Vault pitch establishes this dark Bio-Emerald theme and light medical-teal theme. fileciteturn0file0L8-L29
+
+Use:
+
+- glassmorphism-inspired cards
+- subtle borders
+- soft shadows
+- rounded cards
+- emerald/mint accents
+- warm amber highlights
+- professional medical-financial visual language
+- responsive design
+- accessible contrast
+
+Include a persistent Dark/Light theme toggle.
+
+---
+
+# 21. Frontend
+
+Use:
+
+```text
+React + TypeScript
+```
+
+Required pages:
+
+## Public
+
+- Landing
+- About / How It Works
+- Transparency
+- Login
+
+## Authenticated
+
+- Dashboard
+- Patient Requests
+- Create Funding Request
+- Request Details
+- Urgency Score Details
+- Allocation Runs
+- Allocation Results
+- Emergency Allocation
+- Financial Ledger
+- Audit Trail
+- Hospitals
+- Users / Roles
+- System Configuration
+
+## Donor
+
+- Impact Dashboard
+
+The frontend must use real backend APIs.
+
+No static fake dashboards.
+
+---
+
+# 22. Dashboard
+
+### General / Donor View
+
+Show aggregate metrics:
+
+- total budget
+- allocated amount
+- remaining budget
+- treatment packages funded
+- emergency allocations
+- utilization/settlement metrics
+
+### Admin View
+
+Show:
+
+- total budget
+- emergency reserve
+- normal allocation
+- selected requests
+- unselected requests
+- remaining funds
+- total urgency funded
+- allocation algorithm summary
+
+All metrics must come from the backend.
+
+No hardcoded production dashboard values.
+
+---
+
+# 23. Analytics
+
+Implement:
+
+## Sankey Diagram
+
+```text
+Total Budget
+      ↓
+Emergency Reserve
+      ↓
+Normal Allocation
+      ↓
+Selected Treatment Packages
+      ↓
+Hospital Disbursement
+      ↓
+Settled
+```
+
+## Stacked Bar Chart
+
+Possible dimensions:
+
+- department
+- procedure category
+- emergency vs normal
+- allocation status
+
+Charts must use backend data.
+
+---
+
+# 24. DSA Explainability
+
+The admin interface should explain allocation decisions.
+
+For each request show:
+
+- package cost
+- urgency score
+- score breakdown
+- waiting boost
+- emergency status
+- algorithm stage
+- allocation result
+
+For allocation runs show:
+
+```text
+Primary:
+0/1 KNAPSACK
+
+Fallback:
+GREEDY
+```
+
+Explain:
+
+- why selected
+- why not selected
+- budget consumed
+- budget remaining
+
+Do not expose unnecessary internal details to normal patients.
+
+---
+
+# 25. Backend Architecture
+
+Use:
+
+```text
+Python
+FastAPI
+Pydantic
+SQLAlchemy or equivalent ORM
+MySQL
+```
+
+Architecture:
+
+```text
+API
+ ↓
+Schema Validation
+ ↓
+Service Layer
+ ↓
+DSA / Domain Layer
+ ↓
+Database
+```
+
+Do not put business logic directly inside route handlers.
+
+---
+
+# 26. API Layer
+
+Implement appropriate REST APIs.
+
+Minimum conceptual endpoints:
+
+```text
+POST /auth/login
+GET  /auth/me
+
+GET  /diseases
+GET  /procedures
+GET  /treatment-packages
+GET  /esi
+
+POST /funding-requests
+GET  /funding-requests
+GET  /funding-requests/{id}
+
+POST /scoring/calculate
+
+GET  /budgets/current
+POST /budgets
+
+POST /allocation/run
+GET  /allocation/runs/{id}
+GET  /allocation/results
+
+POST /emergency/allocate
+
+GET  /ledger
+GET  /audit-logs
+
+POST /utilization-certificates
+POST /utilization-certificates/{id}/verify
+
+GET /dashboard/summary
+GET /dashboard/allocation-flow
+```
+
+Adapt schemas to the actual dataset and database.
+
+---
+
+# 27. DSA Engine Structure
+
+Use:
+
+```text
+dsa-engine/
+├── knapsack/
+├── greedy/
+├── scoring/
+├── emergency/
+└── tests/
+```
+
+Suggested functions:
+
+```text
+knapsack_solver()
+greedy_fallback()
+calculate_urgency_score()
+calculate_waiting_boost()
+calculate_budget_split()
+process_emergency_allocation()
+```
+
+Keep these independently testable.
+
+---
+
+# 28. Testing Plan
+
+## Knapsack
+
+Test:
+
+- empty input
+- zero budget
+- one item
+- exact budget
+- multiple combinations
+- optimal selection
+- reconstruction
+- remaining budget
+
+## Greedy
+
+Test:
+
+- zero remaining budget
+- no fitting items
+- multiple fitting items
+- deterministic output
+
+## Scoring
+
+Test:
+
+- ICD lookup
+- ESI lookup
+- waiting boost
+- emergency handling
+- boundary values
+
+## Dataset
+
+Test:
+
+- malformed rows
+- missing values
+- duplicates
+- invalid costs
+- invalid severity
+- invalid ESI
+
+## Backend
+
+Test:
+
+- login
+- authorization
+- invalid input
+- state transitions
+- database constraints
+
+## Integration
+
+Test:
+
+```text
+Request
+→ Dataset Lookup
+→ Score
+→ Budget
+→ Knapsack
+→ Greedy
+→ Allocation
+→ Ledger
+→ Audit
+```
+
+---
+
+# 29. Security
+
+Implement:
+
+- environment variables
+- secure password hashing
+- authentication
+- RBAC
+- backend authorization
+- CORS
+- input validation
+- SQL injection protection
+- safe error handling
+- audit logging
+
+Create:
+
+```text
+.env.example
+```
+
+Never commit:
+
+- `.env`
+- passwords
+- API keys
+- database credentials
+- private secrets
+
+---
+
+# 30. Privacy
+
+The synthetic patient queue is prototype/demo data.
+
+Do not introduce real patient PII.
+
+Do not expose patient-level data on public/donor dashboards.
+
+Public views must use aggregate information.
+
+---
+
+# 31. Documentation
+
+Create:
+
+```text
+docs/
+├── architecture/
+├── api/
+├── database/
+└── algorithms/
+```
+
+Minimum documentation:
+
+```text
+architecture/system-design.md
+architecture/data-flow.md
+database/schema.md
+algorithms/knapsack.md
+algorithms/greedy.md
+algorithms/scoring.md
+algorithms/emergency.md
+dataset/data-dictionary.md
+```
+
+The dataset data dictionary must be based on the actual repository dataset.
+
+Do not guess columns.
+
+---
+
+# 32. README
+
+README.md must explain:
+
+- project overview
+- problem
+- solution
+- architecture
+- dataset
+- dataset structure
+- DSA
+- Knapsack
+- Greedy fallback
+- scoring
+- emergency reserve
+- database
+- authentication
+- RBAC
+- financial ledger
+- audit trail
+- frontend
+- backend
+- installation
+- environment variables
+- database setup
+- dataset setup
+- frontend run command
+- backend run command
+- testing
+- limitations
+
+---
+
+# 33. No Fake Functionality
+
+Strict rules:
+
+- No dead buttons
+- No fake charts
+- No fake API responses after real APIs exist
+- No hardcoded dashboard metrics
+- No fake DSA results
+- No fake database status
+- No pretending simulated payments are real
+
+If a feature cannot be fully implemented:
+
+make the limitation explicit.
+
+---
+
+# 34. Implementation Order
+
+Follow this order.
+
+## Phase 1
+
+Repository inspection.
+
+## Phase 2
+
+Dataset inspection and validation.
+
+## Phase 3
+
+Database architecture.
+
+## Phase 4
+
+DSA engine.
+
+## Phase 5
+
+Backend services.
+
+## Phase 6
+
+Authentication and RBAC.
+
+## Phase 7
+
+Frontend architecture.
+
+## Phase 8
+
+Bio-Emerald design system.
+
+## Phase 9
+
+Dashboard and workflows.
+
+## Phase 10
+
+Financial ledger and audit.
+
+## Phase 11
+
+Integration.
+
+## Phase 12
+
+Testing.
+
+## Phase 13
+
+Documentation.
+
+After each phase:
+
+```text
+Run tests
+↓
+Inspect failures
+↓
+Fix
+↓
+Run tests again
+↓
+Continue
+```
+
+---
+
+# 35. End-to-End Verification
+
+Verify the complete journey:
+
+```text
+LOGIN
+ ↓
+CREATE / LOAD PATIENT REQUEST
+ ↓
+SELECT DISEASE FROM REAL DATASET
+ ↓
+SELECT PROCEDURE FROM REAL DATASET
+ ↓
+SELECT / CALCULATE TREATMENT PACKAGE
+ ↓
+CALCULATE URGENCY
+ ↓
+SUBMIT REQUEST
+ ↓
+ADMIN REVIEW
+ ↓
+RUN ALLOCATION
+ ↓
+0/1 KNAPSACK
+ ↓
+GREEDY FALLBACK
+ ↓
+ALLOCATION RESULT
+ ↓
+APPROVAL
+ ↓
+SIMULATED HOSPITAL DISBURSEMENT
+ ↓
+UTILIZATION CERTIFICATE
+ ↓
+VERIFICATION
+ ↓
+SETTLEMENT
+ ↓
+AUDIT LOG
+```
+
+Also verify:
+
+```text
+EMERGENCY REQUEST
+ ↓
+ESI / EMERGENCY DATA
+ ↓
+EMERGENCY RESERVE CHECK
+ ↓
+AUTHORIZED ALLOCATION
+ ↓
+LEDGER
+ ↓
+AUDIT
+```
+
+---
+
+# 36. Definition of Done
+
+The project is complete only when:
+
+- Existing dataset has been inspected
+- Existing dataset is actually integrated
+- Dataset validation works
+- Database starts
+- Migrations work
+- Dataset import/seed works
+- Backend starts
+- Frontend starts
+- Authentication works
+- RBAC works
+- Real scoring works
+- Real Knapsack works
+- Greedy fallback works
+- Emergency reserve works
+- Allocation works
+- Financial ledger works
+- Audit trail works
+- Utilization workflow works
+- Dashboard uses backend data
+- Charts use backend data
+- Bio-Emerald theme works
+- Light/Dark theme works
+- DSA explanation works
+- Tests pass
+- Build passes
+- README is complete
+- Documentation is complete
+- No obvious fake functionality remains
+
+---
+
+# 37. Final Claude Code Instruction
+
+START BY INSPECTING THE EXISTING REPOSITORY.
+
+THEN INSPECT THE EXISTING `dataset/` DIRECTORY.
+
+DO NOT ASK FOR DATA THAT IS ALREADY PRESENT IN THE REPOSITORY.
+
+DO NOT INVENT DATA.
+
+DO NOT REPLACE DATA.
+
+DO NOT BUILD A GENERIC TEMPLATE.
+
+DO NOT BUILD ONLY THE FRONTEND.
+
+DO NOT STOP AFTER GENERATING FILES.
+
+USE THE EXISTING DATASET.
+
+USE THE REAL DSA ENGINE.
+
+USE THE BIO-EMERALD PRODUCT IDENTITY.
+
+CONNECT EVERYTHING END-TO-END.
+
+RUN TESTS.
+
+FIX ERRORS.
+
+VERIFY THE COMPLETE USER JOURNEY.
+
+ONLY THEN DECLARE THE PROJECT COMPLETE.

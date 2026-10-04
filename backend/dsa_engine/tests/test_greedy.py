@@ -21,7 +21,7 @@ def test_zero_remaining_budget():
     assert result.selected_items == []
     assert result.total_weight == 0
     assert result.remaining_capacity == 0
-    print("✓ test_zero_remaining_budget passed")
+    print(" test_zero_remaining_budget passed")
 
 
 def test_no_fitting_items():
@@ -34,7 +34,7 @@ def test_no_fitting_items():
     result = greedy.solve(items)
     assert len(result.selected_items) == 0
     assert result.remaining_capacity == 100000
-    print("✓ test_no_fitting_items passed")
+    print(" test_no_fitting_items passed")
 
 
 def test_multiple_fitting_items():
@@ -55,7 +55,7 @@ def test_multiple_fitting_items():
     assert len(result.selected_items) == 3
     selected_ids = {item.request_id for item in result.selected_items}
     assert selected_ids == {1, 3, 4}
-    print("✓ test_multiple_fitting_items passed")
+    print(" test_multiple_fitting_items passed")
 
 
 def test_deterministic_output():
@@ -73,7 +73,7 @@ def test_deterministic_output():
 
     assert result1.selected_request_ids == result2.selected_request_ids
     assert result1.allocation_order == result2.allocation_order
-    print("✓ test_deterministic_output passed")
+    print(" test_deterministic_output passed")
 
 
 def test_exclude_ids():
@@ -89,7 +89,7 @@ def test_exclude_ids():
     selected_ids = {item.request_id for item in result.selected_items}
     assert 1 not in selected_ids
     assert len(result.selected_items) <= 2
-    print("✓ test_exclude_ids passed")
+    print(" test_exclude_ids passed")
 
 
 def test_emergency_reserve_not_used():
@@ -102,7 +102,7 @@ def test_emergency_reserve_not_used():
     # Should only use normal budget, not emergency reserve
     assert result.total_weight == 100000
     # Emergency reserve untouched
-    print("✓ test_emergency_reserve_not_used passed")
+    print(" test_emergency_reserve_not_used passed")
 
 
 def test_value_density_sorting():
@@ -118,7 +118,7 @@ def test_value_density_sorting():
     # Should select HIGH (0.9) then MED (0.7) - total 200k
     assert result.selected_request_ids == [2, 3]
     assert result.allocation_order == [2, 3]
-    print("✓ test_value_density_sorting passed")
+    print(" test_value_density_sorting passed")
 
 
 def test_tiebreaker():
@@ -133,12 +133,12 @@ def test_tiebreaker():
 
     # All have same density 0.8
     # Tiebreaker: higher urgency first -> A and B (urgency 80) before C (urgency 40)
-    # Then lower cost -> but A and B have same cost
-    # So should pick A then B (by request_id)
-    assert result.allocation_order[0] in [1, 2]
-    assert result.allocation_order[1] in [1, 2]
-    assert result.allocation_order[0] != result.allocation_order[1]
-    print("✓ test_tiebreaker passed")
+    # Budget 150000: can fit one 100k item + one 50k item = 150k
+    # So should pick one of A/B (100k) then C (50k)
+    assert result.allocation_order[0] in [1, 2]  # First is A or B (higher urgency)
+    assert result.allocation_order[1] == 3       # Second is C (fits in remaining 50k)
+    assert len(result.allocation_order) == 2
+    print(" test_tiebreaker passed")
 
 
 def test_run_greedy_fallback_integration():
@@ -162,10 +162,10 @@ def test_run_greedy_fallback_integration():
 
     # No duplicate selections
     knapsack_ids = set(knapsack_result.selected_request_ids)
-    greedy_ids = set(greedy_result['selected_request_ids'])
+    greedy_ids = set(greedy_result['allocation_order'])
     assert knapsack_ids.isdisjoint(greedy_ids)
 
-    print("✓ test_run_greedy_fallback_integration passed")
+    print(" test_run_greedy_fallback_integration passed")
 
 
 def test_solve_with_details():
@@ -184,7 +184,7 @@ def test_solve_with_details():
     assert 'not_selected_requests' in details
     assert 'allocation_order' in details
     assert 'selection_strategy' in details
-    print("✓ test_solve_with_details passed")
+    print(" test_solve_with_details passed")
 
 
 if __name__ == "__main__":
@@ -198,4 +198,4 @@ if __name__ == "__main__":
     test_tiebreaker()
     test_run_greedy_fallback_integration()
     test_solve_with_details()
-    print("\n✅ All greedy tests passed!")
+    print("\nAll greedy tests passed!")

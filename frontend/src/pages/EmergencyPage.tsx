@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { api, emergencyApi, requestsApi } from '../services/api';
+import { emergencyApi, requestsApi } from '../services/api';
 import {
   AlertTriangle,
   HeartPulse,
@@ -9,13 +9,9 @@ import {
   XCircle,
   DollarSign,
   Clock,
-  User,
-  Hospital,
   FileText,
-  Search,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
+} 
+from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface EmergencyAllocation {
@@ -102,7 +98,7 @@ export function EmergencyPage() {
       const [reserveRes, allocationsRes, requestsRes] = await Promise.all([
         emergencyApi.getReserveStatus(),
         emergencyApi.listAllocations(),
-        requestsApi.list({ is_emergency: 'true' }),
+        requestsApi.list({ is_emergency: true }),
       ]);
       setReserveStatus(reserveRes.data);
       setAllocations(allocationsRes.data);
@@ -311,7 +307,7 @@ export function EmergencyPage() {
                           <td className="px-4 py-3"><span className="font-mono text-sm">{alloc.allocation_code}</span></td>
                           <td className="px-4 py-3"><span className="font-mono text-sm">{alloc.funding_request?.request_code}</span></td>
                           <td className="px-4 py-3 text-sm">
-                            {alloc.funding_request?.patient ? `PV${String(alloc.funding_request.patient.patient_id).padStart(5, '0')} - ${alloc.funding_request.patient.first_name} ${alloc.funding_request.patient.last_name}` : 'N/A'}
+                            {alloc.funding_request?.patient ? `PV${String(alloc.funding_request.patient.patient_code).padStart(5, '0')} - ${alloc.funding_request.patient.first_name} ${alloc.funding_request.patient.last_name}` : 'N/A'}
                           </td>
                           <td className="px-4 py-3 text-sm">
                             {alloc.funding_request?.disease ? `${alloc.funding_request.disease.icd10_category} - ${alloc.funding_request.disease.description}` : 'N/A'}
@@ -380,7 +376,7 @@ export function EmergencyPage() {
                   </li>
                   <li className="flex items-center gap-3">
                     <Clock className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-highlight)' }} />
-                    <span>Time-to-treatment < 2 hours (TTC category: <2h)</span>
+                    <span>Time-to-treatment &lt;   2 hours (TTC category: {"<2h"})</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <FileText className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-secondary)' }} />
@@ -432,7 +428,7 @@ export function EmergencyPage() {
                           <div className="min-w-0">
                             <p className="font-medium truncate">{req.request_code}</p>
                             <p className="text-xs truncate" style={{ color: 'var(--color-muted)' }}>
-                              {req.patient ? `PV${String(req.patient.patient_id).padStart(5, '0')} - ${req.patient.first_name} ${req.patient.last_name}` : 'Unknown patient'}
+                              {req.patient ? `PV${String(req.patient.patient_code).padStart(5, '0')} - ${req.patient.first_name} ${req.patient.last_name}` : 'Unknown patient'}
                               {req.disease && ` | ${req.disease.icd10_category} - ${req.disease.description}`}
                             </p>
                           </div>
@@ -467,7 +463,7 @@ export function EmergencyPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                       <p className="text-xs font-medium" style={{ color: 'var(--color-muted)' }}>Patient</p>
-                      <p>{selectedRequest.patient ? `${selectedRequest.patient.first_name} ${selectedRequest.patient.last_name} (PV${String(selectedRequest.patient.patient_id).padStart(5, '0')})` : 'N/A'}</p>
+                      <p>{selectedRequest.patient ? `${selectedRequest.patient.first_name} ${selectedRequest.patient.last_name} (PV${String(selectedRequest.patient.patient_code).padStart(5, '0')})` : 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-xs font-medium" style={{ color: 'var(--color-muted)' }}>Disease</p>
@@ -509,7 +505,7 @@ export function EmergencyPage() {
                 </div>
               )}
 
-              {!user?.role === 'ADMIN' && activeTab === 'request' && (
+              {user?.role !== 'ADMIN' && activeTab === 'request' && (
                 <div className="glass-card p-6 text-center" style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
                   <AlertTriangle className="w-12 h-12 mx-auto mb-4" style={{ color: '#EF4444' }} />
                   <h3 className="text-lg font-semibold mb-2" style={{ color: '#EF4444' }}>Admin Access Required</h3>

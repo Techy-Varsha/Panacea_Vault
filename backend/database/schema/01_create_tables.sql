@@ -5,15 +5,6 @@
 -- ENUMS AND TYPES
 -- ============================================================
 
-CREATE TYPE user_role AS ENUM ('PATIENT', 'DOCTOR', 'HOSPITAL', 'ADMIN', 'AUDITOR', 'DONOR');
-CREATE TYPE request_status AS ENUM ('PENDING', 'ELIGIBLE', 'SELECTED', 'APPROVED', 'DISBURSED', 'UTILIZATION_PENDING', 'VERIFIED', 'SETTLED', 'REJECTED', 'EXPIRED');
-CREATE TYPE allocation_stage AS ENUM ('KNAPSACK', 'GREEDY_FALLBACK', 'EMERGENCY');
-CREATE TYPE audit_action AS ENUM (
-    'USER_LOGIN', 'REQUEST_CREATED', 'REQUEST_UPDATED', 'SCORE_CALCULATED',
-    'ALLOCATION_STARTED', 'KNAPSACK_COMPLETED', 'GREEDY_FALLBACK_COMPLETED',
-    'EMERGENCY_ALLOCATION', 'ALLOCATION_APPROVED', 'DISBURSEMENT_CREATED',
-    'UC_SUBMITTED', 'UC_VERIFIED', 'CASE_SETTLED'
-);
 
 -- ============================================================
 -- CORE TABLES
@@ -35,6 +26,7 @@ CREATE TABLE users (
     full_name VARCHAR(255) NOT NULL,
     role_id INT NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
+    role ENUM('PATIENT', 'DOCTOR', 'HOSPITAL', 'ADMIN', 'AUDITOR', 'DONOR') NOT NULL,
     last_login TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -156,11 +148,11 @@ CREATE TABLE funding_requests (
     success_rate DECIMAL(5,4),
     success_rate_points DECIMAL(5,2),
     age_factor_points INT,
+    status ENUM('PENDING', 'ELIGIBLE', 'SELECTED', 'APPROVED', 'DISBURSED', 'UTILIZATION_PENDING', 'VERIFIED', 'SETTLED', 'REJECTED', 'EXPIRED') NOT NULL,
     waiting_days INT DEFAULT 0,
     waiting_boost INT DEFAULT 0,
     is_emergency BOOLEAN DEFAULT FALSE,
     esi_level INT NULL,
-    status request_status DEFAULT 'PENDING',
     eligibility_notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -229,12 +221,12 @@ CREATE TABLE allocation_results (
     id INT PRIMARY KEY AUTO_INCREMENT,
     allocation_run_id INT NOT NULL,
     funding_request_id INT NOT NULL,
-    allocation_stage allocation_stage NOT NULL,
     allocated_amount_inr DECIMAL(15,2) NOT NULL,
     urgency_score DECIMAL(10,2) NOT NULL,
     selection_order INT,
     is_selected BOOLEAN DEFAULT TRUE,
     notes TEXT,
+    allocation_stage ENUM('KNAPSACK', 'GREEDY_FALLBACK', 'EMERGENCY') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (allocation_run_id) REFERENCES allocation_runs(id) ON DELETE CASCADE,
     FOREIGN KEY (funding_request_id) REFERENCES funding_requests(id),
@@ -312,7 +304,7 @@ CREATE TABLE audit_logs (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     actor_id INT,
     actor_role VARCHAR(50),
-    action audit_action NOT NULL,
+    action ENUM('USER_LOGIN', 'REQUEST_CREATED', 'REQUEST_UPDATED', 'SCORE_CALCULATED', 'ALLOCATION_STARTED', 'KNAPSACK_COMPLETED', 'GREEDY_FALLBACK_COMPLETED', 'EMERGENCY_ALLOCATION', 'ALLOCATION_APPROVED', 'DISBURSEMENT_CREATED', 'UC_SUBMITTED', 'UC_VERIFIED', 'CASE_SETTLED') NOT NULL,
     entity_type VARCHAR(100) NOT NULL,
     entity_id VARCHAR(100) NOT NULL,
     old_state JSON,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { api, usersApi } from '../services/api';
+import { usersApi } from '../services/api';
 import {
   Users,
   Loader2,
@@ -12,7 +12,6 @@ import {
   Plus,
   Edit,
   Trash2,
-  Eye,
   Shield,
   User,
   Stethoscope,
@@ -328,7 +327,8 @@ export function UsersPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--color-primary)/20' }}>
-                          <roleIcons[u.role] || User className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
+                          {(() => {const IconComponent = (roleIcons[u.role] || User) as React.ComponentType<React.SVGProps<SVGSVGElement>>;
+                          return <IconComponent className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />;})()}
                         </div>
                         <div>
                           <p className="font-medium">{u.full_name}</p>
@@ -456,7 +456,7 @@ export function UsersPage() {
                   className="w-full px-4 py-2 rounded-xl bg-transparent border border-white/10 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50"
                   style={{ color: 'var(--color-text)', background: 'var(--color-card)' }}
                   required
-                  disabled={editingUser}
+                  disabled={!!editingUser}
                 />
               </div>
               <div>
@@ -481,7 +481,7 @@ export function UsersPage() {
                   onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
                   className="w-full px-4 py-2 rounded-xl bg-transparent border border-white/10 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50"
                   style={{ color: 'var(--color-text)', background: 'var(--color-card)' }}
-                  disabled={editingUser}
+                  disabled={!!editingUser}
                 >
                   <option value="DOCTOR">Doctor</option>
                   <option value="HOSPITAL">Hospital</option>

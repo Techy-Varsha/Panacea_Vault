@@ -2,7 +2,7 @@
 Urgency Score model (detailed breakdown)
 """
 
-from sqlalchemy import Column, Integer, Numeric, ForeignKey, DateTime, JSON, Text
+from sqlalchemy import Column, Integer, Numeric, ForeignKey, DateTime, JSON, Text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base

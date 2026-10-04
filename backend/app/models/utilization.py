@@ -2,7 +2,7 @@
 Utilization Certificate model
 """
 
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, Numeric, Date, JSON
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, Numeric, Date, JSON, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base

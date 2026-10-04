@@ -322,7 +322,7 @@ export function AllocationPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="glass-card p-6 border-l-4" style={{ borderColor: 'var(--color-primary)' }}>
                   <h3 className="font-semibold mb-2 flex items-center gap-2">
-                    <span className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400">KNAPSACK</h3>
+                    <span className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400">KNAPSACK</span></h3>
                   <p className="text-3xl font-bold" style={{ color: 'var(--color-primary)' }}>
                     {selectedRun.run.knapsack_requests}
                   </p>
@@ -332,7 +332,7 @@ export function AllocationPage() {
                 </div>
                 <div className="glass-card p-6 border-l-4" style={{ borderColor: 'var(--color-highlight)' }}>
                   <h3 className="font-semibold mb-2 flex items-center gap-2">
-                    <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-400">GREEDY</h3>
+                    <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-400">GREEDY</span></h3>
                   <p className="text-3xl font-bold" style={{ color: 'var(--color-highlight)' }}>
                     {selectedRun.run.greedy_requests}
                   </p>
@@ -342,7 +342,7 @@ export function AllocationPage() {
                 </div>
                 <div className="glass-card p-6 border-l-4" style={{ borderColor: '#EF4444' }}>
                   <h3 className="font-semibold mb-2 flex items-center gap-2">
-                    <span className="px-2 py-1 rounded text-xs bg-red-500/20 text-red-400">EMERGENCY</h3>
+                    <span className="px-2 py-1 rounded text-xs bg-red-500/20 text-red-400">EMERGENCY</span></h3>
                   <p className="text-3xl font-bold" style={{ color: '#EF4444' }}>
                     {selectedRun.run.emergency_requests}
                   </p>
@@ -433,7 +433,7 @@ export function AllocationPage() {
               {selectedRun.knapsack_details && (
                 <div className="glass-card p-6">
                   <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <span className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400">KNAPSACK DETAILS</h3>
+                    <span className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400">KNAPSACK DETAILS</span></h3>
                   <pre className="text-xs overflow-x-auto p-4 rounded-xl" style={{ background: 'var(--color-bg)', color: 'var(--color-text)' }}>
                     {JSON.stringify(selectedRun.knapsack_details, null, 2)}
                   </pre>
@@ -444,7 +444,7 @@ export function AllocationPage() {
               {selectedRun.greedy_details && (
                 <div className="glass-card p-6">
                   <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-400">GREEDY FALLBACK DETAILS</h3>
+                    <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-400">GREEDY FALLBACK DETAILS</span></h3>
                   <pre className="text-xs overflow-x-auto p-4 rounded-xl" style={{ background: 'var(--color-bg)', color: 'var(--color-text)' }}>
                     {JSON.stringify(selectedRun.greedy_details, null, 2)}
                   </pre>

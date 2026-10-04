@@ -115,7 +115,7 @@ export function RequestDetailPage() {
     if (!confirm('Are you sure you want to delete this request? This action cannot be undone.')) return;
     try {
       setIsDeleting(true);
-      await requestsApi.delete(Number(id));
+      await api.delete(`/requests/${Number(id)}`);
       navigate('/requests');
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Failed to delete request');
@@ -360,7 +360,7 @@ export function RequestDetailPage() {
               <div className="p-4 rounded-xl" style={{ background: 'var(--color-highlight)/10', border: '1px solid var(--color-highlight)/30' }}>
                 <p className="text-xs font-medium" style={{ color: 'var(--color-muted)' }}>Waiting Boost</p>
                 <p className="text-2xl font-bold" style={{ color: 'var(--color-highlight)' }}>{request.waiting_boost}</p>
-                <p className="text-xs mt-1" style={{ color: 'var(--color-secondary)' }}{request.waiting_days} days waiting</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--color-secondary)' }}>{request.waiting_days} days waiting</p>
               </div>
               {request.is_emergency && (
                 <div className="p-4 rounded-xl" style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)' }}>

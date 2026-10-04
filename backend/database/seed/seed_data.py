@@ -16,7 +16,7 @@ DB_CONFIG = {
     'host': os.getenv('DB_HOST', 'localhost'),
     'port': int(os.getenv('DB_PORT', 3306)),
     'user': os.getenv('DB_USER', 'root'),
-    'password': os.getenv('DB_PASSWORD', ''),
+    'password': os.getenv('DB_PASSWORD', '#Mysql1root'),
     'database': os.getenv('DB_NAME', 'panacea_vault')
 }
 
@@ -269,7 +269,7 @@ def seed_budget(cursor):
     """Create a default daily budget"""
     cursor.execute("""
         INSERT INTO budgets (budget_date, total_daily_budget_inr, emergency_reserve_percent, created_by)
-        VALUES (CURDATE(), 5000000.00, 15.00, (SELECT id FROM users WHERE role_id = (SELECT id FROM roles WHERE name = 'ADMIN') LIMIT 1))
+        VALUES (CURDATE(), 5000000.00, 15.00, 1)
         ON DUPLICATE KEY UPDATE
             total_daily_budget_inr=VALUES(total_daily_budget_inr),
             emergency_reserve_percent=VALUES(emergency_reserve_percent)

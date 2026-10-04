@@ -18,9 +18,6 @@ import { LedgerPage } from './pages/LedgerPage';
 import { AuditPage } from './pages/AuditPage';
 import { HospitalsPage } from './pages/HospitalsPage';
 import { UsersPage } from './pages/UsersPage';
-import { SettingsPage } from './pages/SettingsPage';
-import { DonorDashboardPage } from './pages/DonorDashboardPage';
-
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode; allowedRoles?: string[] }) {
   const { user, isLoading } = useAuth();
 
@@ -164,19 +161,13 @@ function App() {
             </Layout>
           </ProtectedRoute>
         } />
-        <Route path="/settings" element={
-          <ProtectedRoute>
-            <Layout>
-              <SettingsPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+        
 
         {/* Donor Route */}
         <Route path="/donor" element={
           <ProtectedRoute allowedRoles={['DONOR', 'ADMIN']}>
             <Layout>
-              <DonorDashboardPage />
+              <DashboardPage />
             </Layout>
           </ProtectedRoute>
         } />

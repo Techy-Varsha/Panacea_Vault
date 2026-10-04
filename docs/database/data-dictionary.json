@@ -1,0 +1,234 @@
+{
+  "ESI_Reference.csv": {
+    "rows": 5,
+    "columns": [
+      "esi_level",
+      "urgency_band",
+      "definition_summary",
+      "resource_concept",
+      "source_note"
+    ],
+    "dtypes": {
+      "esi_level": "int64",
+      "urgency_band": "str",
+      "definition_summary": "str",
+      "resource_concept": "str",
+      "source_note": "str"
+    },
+    "sample_values": {
+      "esi_level": [
+        1,
+        2,
+        3
+      ],
+      "urgency_band": [
+        "Most urgent",
+        "High urgency",
+        "Moderate urgency"
+      ],
+      "definition_summary": [
+        "Immediate life-saving intervention",
+        "High-risk/severe distress/time-sensitive",
+        "Stable; multiple resources may be needed"
+      ],
+      "resource_concept": [
+        "Resuscitation/immediate stabilization",
+        "Very rapid assessment",
+        "Multiple resources"
+      ],
+      "source_note": [
+        "Based on AHRQ Emergency Severity Index Version 4; not a Panacea funding score.",
+        "Based on AHRQ Emergency Severity Index Version 4; not a Panacea funding score.",
+        "Based on AHRQ Emergency Severity Index Version 4; not a Panacea funding score."
+      ]
+    }
+  },
+  "ICD_Severity.csv": {
+    "rows": 30,
+    "columns": [
+      "icd10_category",
+      "description",
+      "department",
+      "prototype_base_severity",
+      "source_note"
+    ],
+    "dtypes": {
+      "icd10_category": "str",
+      "description": "str",
+      "department": "str",
+      "prototype_base_severity": "int64",
+      "source_note": "str"
+    },
+    "sample_values": {
+      "icd10_category": [
+        "I21",
+        "I60",
+        "I61"
+      ],
+      "description": [
+        "Acute myocardial infarction",
+        "Nontraumatic subarachnoid hemorrhage",
+        "Nontraumatic intracerebral hemorrhage"
+      ],
+      "department": [
+        "Cardiology",
+        "Neurosurgery",
+        "Neurosurgery"
+      ],
+      "prototype_base_severity": [
+        95,
+        98,
+        98
+      ],
+      "source_note": [
+        "ICD terminology based on WHO ICD-10; severity is a Panacea prototype heuristic, not an official WHO score.",
+        "ICD terminology based on WHO ICD-10; severity is a Panacea prototype heuristic, not an official WHO score.",
+        "ICD terminology based on WHO ICD-10; severity is a Panacea prototype heuristic, not an official WHO score."
+      ]
+    }
+  },
+  "Surgery_Mapping.csv": {
+    "rows": 30,
+    "columns": [
+      "department",
+      "surgery_name",
+      "example_icd10_pcs_code",
+      "source_note"
+    ],
+    "dtypes": {
+      "department": "str",
+      "surgery_name": "str",
+      "example_icd10_pcs_code": "str",
+      "source_note": "str"
+    },
+    "sample_values": {
+      "department": [
+        "General Surgery",
+        "General Surgery",
+        "General Surgery"
+      ],
+      "surgery_name": [
+        "Appendectomy",
+        "Cholecystectomy",
+        "Colectomy"
+      ],
+      "example_icd10_pcs_code": [
+        "0DTJ0ZZ",
+        "0FT40ZZ",
+        "0DTM0ZZ"
+      ],
+      "source_note": [
+        "Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.",
+        "Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30.",
+        "Candidate prototype list using ICD-10-PCS-style procedure coding; not an official frequency-ranked Top 30."
+      ]
+    }
+  },
+  "Synthetic_Queue.csv": {
+    "rows": 10000,
+    "columns": [
+      "patient_id",
+      "age",
+      "icd10_category",
+      "department",
+      "prototype_base_severity",
+      "ttc_category",
+      "ttc_points_30",
+      "success_rate",
+      "success_rate_points_20",
+      "age_factor_points_10",
+      "surgery_cost_inr",
+      "surety_amount_inr",
+      "funding_gap_inr",
+      "urgency_score_100"
+    ],
+    "dtypes": {
+      "patient_id": "str",
+      "age": "int64",
+      "icd10_category": "str",
+      "department": "str",
+      "prototype_base_severity": "int64",
+      "ttc_category": "str",
+      "ttc_points_30": "int64",
+      "success_rate": "float64",
+      "success_rate_points_20": "float64",
+      "age_factor_points_10": "int64",
+      "surgery_cost_inr": "int64",
+      "surety_amount_inr": "int64",
+      "funding_gap_inr": "int64",
+      "urgency_score_100": "float64"
+    },
+    "sample_values": {
+      "patient_id": [
+        "PV00001",
+        "PV00002",
+        "PV00003"
+      ],
+      "age": [
+        41,
+        32,
+        53
+      ],
+      "icd10_category": [
+        "I61",
+        "S32",
+        "C34"
+      ],
+      "department": [
+        "Neurosurgery",
+        "Orthopedics",
+        "Oncology"
+      ],
+      "prototype_base_severity": [
+        98,
+        82,
+        74
+      ],
+      "ttc_category": [
+        "1-3d",
+        "1-3d",
+        "2-6h"
+      ],
+      "ttc_points_30": [
+        10,
+        10,
+        25
+      ],
+      "success_rate": [
+        0.6374,
+        0.7805,
+        0.6452
+      ],
+      "success_rate_points_20": [
+        12.75,
+        15.61,
+        12.9
+      ],
+      "age_factor_points_10": [
+        8,
+        8,
+        6
+      ],
+      "surgery_cost_inr": [
+        1000000,
+        750000,
+        150000
+      ],
+      "surety_amount_inr": [
+        50000,
+        25000,
+        10000
+      ],
+      "funding_gap_inr": [
+        950000,
+        725000,
+        140000
+      ],
+      "urgency_score_100": [
+        69.95,
+        66.41,
+        73.5
+      ]
+    }
+  }
+}

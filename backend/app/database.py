@@ -8,7 +8,7 @@ from app.config import settings
 
 # Create engine
 engine = create_engine(
-    settings.DATABASE_URL,
+    "mysql+pymysql://root:%23Mysql1root@localhost:3306/panacea_vault",
     pool_pre_ping=True,
     pool_recycle=300,
     echo=settings.DEBUG

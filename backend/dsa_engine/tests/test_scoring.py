@@ -18,7 +18,7 @@ def test_ttc_category_points():
     assert TTCategory.get_points("3-7d") == 5
     assert TTCategory.get_points("7d+") == 0
     assert TTCategory.get_points("invalid") == 0
-    print("✓ test_ttc_category_points passed")
+    print(" test_ttc_category_points passed")
 
 
 def test_regular_request():
@@ -42,7 +42,7 @@ def test_regular_request():
     assert result.age_component == 8
     assert result.waiting_boost == 0
     assert result.final_score == 100.0  # Capped
-    print("✓ test_regular_request passed")
+    print(" test_regular_request passed")
 
 
 def test_low_severity_request():
@@ -65,7 +65,7 @@ def test_low_severity_request():
     assert result.success_rate_component == 18.0
     assert result.age_component == 9
     assert result.final_score == 92.0
-    print("✓ test_low_severity_request passed")
+    print(" test_low_severity_request passed")
 
 
 def test_waiting_boost():
@@ -85,7 +85,7 @@ def test_waiting_boost():
     # 70 + 10 + 18.0 + 9 + 25 = 132 -> capped at 100
     assert result.waiting_boost == 25
     assert result.final_score == 100.0
-    print("✓ test_waiting_boost passed")
+    print(" test_waiting_boost passed")
 
 
 def test_waiting_boost_not_capped():
@@ -120,7 +120,7 @@ def test_waiting_boost_not_capped():
     # 50 + 0 + 14.0 + 5 + 20 = 89
     assert result2.final_score == 89.0
     assert result2.waiting_boost == 20
-    print("✓ test_waiting_boost_not_capped passed")
+    print(" test_waiting_boost_not_capped passed")
 
 
 def test_emergency_request():
@@ -145,7 +145,7 @@ def test_emergency_request():
     assert result.emergency_component == 15
     # 95 + 30 + 17.0 + 6 + 0 + 15 + 30 = 193 -> capped at 100
     assert result.final_score == 100.0
-    print("✓ test_emergency_request passed")
+    print(" test_emergency_request passed")
 
 
 def test_emergency_esi_levels():
@@ -173,7 +173,7 @@ def test_emergency_esi_levels():
     assert esi_scores[3] == 10
     assert esi_scores[4] == 5
     assert esi_scores[5] == 0
-    print("✓ test_emergency_esi_levels passed")
+    print(" test_emergency_esi_levels passed")
 
 
 def test_non_emergency_no_esi():
@@ -194,7 +194,7 @@ def test_non_emergency_no_esi():
 
     assert result.esi_component == 0
     assert result.emergency_component == 0
-    print("✓ test_non_emergency_no_esi passed")
+    print(" test_non_emergency_no_esi passed")
 
 
 def test_max_score_cap():
@@ -215,7 +215,7 @@ def test_max_score_cap():
 
     # Everything maxed out: 99 + 30 + 20 + 10 + 50 + 15 + 30 = 254
     assert result.final_score == 100.0
-    print("✓ test_max_score_cap passed")
+    print(" test_max_score_cap passed")
 
 
 def test_standalone_function():
@@ -233,11 +233,9 @@ def test_standalone_function():
     assert result['success_rate_component'] == 16.0
     assert result['age_component'] == 8
     assert result['waiting_boost'] == 10
-    assert result['final_score'] == 114.0  # Will be capped in actual use, but function returns raw
-    # Actually the function doesn't cap - let me check
-    # The function uses UrgencyScorer which caps at 100
+    # Function uses UrgencyScorer which caps at 100
     assert result['final_score'] == 100.0
-    print("✓ test_standalone_function passed")
+    print(" test_standalone_function passed")
 
 
 def test_score_breakdown_structure():
@@ -262,7 +260,7 @@ def test_score_breakdown_structure():
     ]
     for field in required_fields:
         assert field in breakdown
-    print("✓ test_score_breakdown_structure passed")
+    print(" test_score_breakdown_structure passed")
 
 
 def test_from_request_dict():
@@ -284,7 +282,7 @@ def test_from_request_dict():
     assert result.ttc_component == 30
     assert result.success_rate_component == 19.8
     assert result.age_component == 4
-    print("✓ test_from_request_dict passed")
+    print(" test_from_request_dict passed")
 
 
 if __name__ == "__main__":
@@ -300,4 +298,4 @@ if __name__ == "__main__":
     test_standalone_function()
     test_score_breakdown_structure()
     test_from_request_dict()
-    print("\n✅ All scoring tests passed!")
+    print("\nAll scoring tests passed!")

@@ -3,7 +3,7 @@ Audit Log model
 """
 
 import enum
-from sqlalchemy import Column, Integer, String, DateTime, Text, JSON, ForeignKey, Index, Enum as SQLEnum, BigInteger
+from sqlalchemy import Column, Integer, String, DateTime, Text, JSON, Boolean, ForeignKey, Index, Enum as SQLEnum, BigInteger
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base

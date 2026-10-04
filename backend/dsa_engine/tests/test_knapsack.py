@@ -18,7 +18,7 @@ def test_empty_input():
     assert result.total_weight == 0
     assert result.total_value == 0.0
     assert result.remaining_capacity == 1000000
-    print("✓ test_empty_input passed")
+    print(" test_empty_input passed")
 
 
 def test_zero_budget():
@@ -32,7 +32,7 @@ def test_zero_budget():
     assert result.selected_items == []
     assert result.total_weight == 0
     assert result.remaining_capacity == 0
-    print("✓ test_zero_budget passed")
+    print(" test_zero_budget passed")
 
 
 def test_one_item_fits():
@@ -45,7 +45,7 @@ def test_one_item_fits():
     assert result.total_weight == 500000
     assert result.total_value == 90.0
     assert result.remaining_capacity == 500000
-    print("✓ test_one_item_fits passed")
+    print(" test_one_item_fits passed")
 
 
 def test_one_item_exceeds():
@@ -56,7 +56,7 @@ def test_one_item_exceeds():
     assert len(result.selected_items) == 0
     assert result.total_weight == 0
     assert result.remaining_capacity == 1000000
-    print("✓ test_one_item_exceeds passed")
+    print(" test_one_item_exceeds passed")
 
 
 def test_exact_budget():
@@ -70,7 +70,7 @@ def test_exact_budget():
     assert result.total_weight == 1000000
     assert result.remaining_capacity == 0
     assert len(result.selected_items) == 2
-    print("✓ test_exact_budget passed")
+    print(" test_exact_budget passed")
 
 
 def test_optimal_selection():
@@ -79,7 +79,7 @@ def test_optimal_selection():
     # A: 600, 90
     # B: 500, 80
     # C: 400, 70
-    # Optimal: B + C = 900 cost, 150 value (better than A = 600 cost, 90 value)
+    # Optimal: A + C = 1000 cost, 160 value (better than B+C = 900 cost, 150 value)
     items = [
         KnapsackItem(1, "REQ-A", 600000, 90.0, 1, 1, 1),
         KnapsackItem(2, "REQ-B", 500000, 80.0, 2, 2, 1),
@@ -87,12 +87,12 @@ def test_optimal_selection():
     ]
     solver = KnapsackSolver(1000000)
     result = solver.solve(items)
-    # Should select B and C (total 900k, value 150)
-    assert result.total_weight == 900000
-    assert result.total_value == 150.0
+    # Should select A and C (total 1000k, value 160)
+    assert result.total_weight == 1000000
+    assert result.total_value == 160.0
     selected_ids = {item.request_id for item in result.selected_items}
-    assert selected_ids == {2, 3}
-    print("✓ test_optimal_selection passed")
+    assert selected_ids == {1, 3}
+    print(" test_optimal_selection passed")
 
 
 def test_reconstruction():
@@ -119,7 +119,7 @@ def test_reconstruction():
     assert result.total_value == 170.0
     selected_ids = {item.request_id for item in result.selected_items}
     assert selected_ids == {1, 3}
-    print("✓ test_reconstruction passed")
+    print(" test_reconstruction passed")
 
 
 def test_multiple_combinations():
@@ -141,7 +141,7 @@ def test_multiple_combinations():
     # Value should be maximized
     print(f"  Selected: {[item.request_code for item in result.selected_items]}")
     print(f"  Weight: {result.total_weight}, Value: {result.total_value}")
-    print("✓ test_multiple_combinations passed")
+    print(" test_multiple_combinations passed")
 
 
 def test_remaining_budget():
@@ -153,7 +153,7 @@ def test_remaining_budget():
     solver = KnapsackSolver(1000000)
     result = solver.solve(items)
     assert result.remaining_capacity == 300000  # 1000000 - 700000
-    print("✓ test_remaining_budget passed")
+    print(" test_remaining_budget passed")
 
 
 def test_scaled_currency():
@@ -166,7 +166,7 @@ def test_scaled_currency():
     solver = KnapsackSolver(1000000, currency_scale=1000)
     result = solver.solve(items)
     assert result.total_weight == 1000000
-    print("✓ test_scaled_currency passed")
+    print(" test_scaled_currency passed")
 
 
 def test_create_items_from_requests():
@@ -180,7 +180,7 @@ def test_create_items_from_requests():
     assert items[0].request_id == 1
     assert items[0].weight == 500000
     assert items[0].value == 90.0
-    print("✓ test_create_items_from_requests passed")
+    print(" test_create_items_from_requests passed")
 
 
 def test_solve_with_details():
@@ -196,7 +196,7 @@ def test_solve_with_details():
     assert details['selected_count'] + details['not_selected_count'] == 2
     assert 'selected_requests' in details
     assert 'not_selected_requests' in details
-    print("✓ test_solve_with_details passed")
+    print(" test_solve_with_details passed")
 
 
 if __name__ == "__main__":
@@ -212,4 +212,4 @@ if __name__ == "__main__":
     test_scaled_currency()
     test_create_items_from_requests()
     test_solve_with_details()
-    print("\n✅ All knapsack tests passed!")
+    print("\nAll knapsack tests passed!")

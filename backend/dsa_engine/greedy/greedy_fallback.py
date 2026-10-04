@@ -18,7 +18,7 @@ Does NOT claim global optimality - it's a practical fallback.
 
 from dataclasses import dataclass
 from typing import List, Optional, Set
-from knapsack.knapsack_solver import KnapsackItem
+from dsa_engine.knapsack.knapsack_solver import KnapsackItem
 
 
 @dataclass

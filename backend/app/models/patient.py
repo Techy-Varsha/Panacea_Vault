@@ -2,7 +2,7 @@
 Patient model
 """
 
-from sqlalchemy import Column, Integer, String, Date, Text, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Date, Text, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
